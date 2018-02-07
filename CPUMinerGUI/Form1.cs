@@ -32,27 +32,27 @@ namespace CPUMinerGUI {
         private const int SW_SHOW = 5;
 
         [DllImport("User32")]
-        private static extern int ShowWindow(int hwnd, int nCmdShow);
+        private static extern int ShowWindow(int nCmdShow, int hwnd);
 
         public Form1() {
             InitializeComponent();
         }
 
-        private void addButton_Click(object sender, EventArgs e) {
+        private void AddButton_Click(object sender, EventArgs e) {
             if (addressText.Text != String.Empty &&
                 userText.Text != String.Empty &&
                 passwordText.Text != String.Empty) {
 
                 poolList.Add(new PoolItem(addressText.Text, userText.Text, passwordText.Text, notesText.Text));
-                writeList();
-                readList();
+                WriteList();
+                ReadList();
             }
         }
 
         private void Form1_Load(object sender, EventArgs e) {
             poolList = new List<PoolItem>();
             miners = new List<Miner>();
-            readList();
+            ReadList();
 
             DirectoryInfo dir = new DirectoryInfo(Application.StartupPath);
 
@@ -60,11 +60,13 @@ namespace CPUMinerGUI {
                 file.Delete();
             }
 
-            FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.Path = Application.StartupPath;
-            watcher.EnableRaisingEvents = true;
-            watcher.Filter = "*_log.txt";
-            watcher.Created += new FileSystemEventHandler(newLogFound);
+            FileSystemWatcher watcher = new FileSystemWatcher
+            {
+                Path = Application.StartupPath,
+                EnableRaisingEvents = true,
+                Filter = "*_log.txt"
+            };
+            watcher.Created += new FileSystemEventHandler(NewLogFound);
 
             hashChart.Series[0].YAxisType = AxisType.Primary;
             hashChart.Series[0].YValueType = ChartValueType.Single;
@@ -77,17 +79,17 @@ namespace CPUMinerGUI {
             hashChart.ChartAreas[0].AxisY.IntervalAutoMode = IntervalAutoMode.FixedCount;
         }
 
-        void newLogFound(object s, FileSystemEventArgs e) {
+        void NewLogFound(object s, FileSystemEventArgs e) {
             if (waitingForLog == false) return;
 
             if (InvokeRequired) {
                 object[] args = { s, e };
-                Invoke(new FileSystemEventHandler(newLogFound), args);
+                Invoke(new FileSystemEventHandler(NewLogFound), args);
             } else {
                 waitingMiner.logFile = e.Name;
                 miners.Add(waitingMiner);
 
-                refreshInstanceList();
+                RefreshInstanceList();
                 instancesList.SelectedIndex = instancesList.Items.Count - 1;
 
                 waitingForLog = false;
@@ -95,7 +97,7 @@ namespace CPUMinerGUI {
 
         }
 
-        private void readList() {
+        private void ReadList() {
             poolList.Clear();
             poolsList.Items.Clear();
             PoolItem.resetId();
@@ -128,7 +130,7 @@ namespace CPUMinerGUI {
             }
         }
 
-        private void writeList() {
+        private void WriteList() {
             string[] items = new string[poolList.Count];
             int i = 0;
 
@@ -139,8 +141,10 @@ namespace CPUMinerGUI {
             File.WriteAllLines("pool_list.txt", items);
         }
 
-        private void poolsList_SelectedIndexChanged(object sender, EventArgs e) {
+        private void PoolsList_SelectedIndexChanged(object sender, EventArgs e) {
+#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
             if (poolsList.SelectedIndex == -1 || poolsList.SelectedIndex == null) return;
+#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
 
             string selItem = poolsList.SelectedItem as string;
 
@@ -157,13 +161,13 @@ namespace CPUMinerGUI {
             startButton.Enabled = true;
         }
 
-        private void removeButton_Click(object sender, EventArgs e) {
+        private void RemoveButton_Click(object sender, EventArgs e) {
             poolList.Remove(curItem);
-            writeList();
-            readList();
+            WriteList();
+            ReadList();
         }
 
-        private void saveButton_Click(object sender, EventArgs e) {
+        private void SaveButton_Click(object sender, EventArgs e) {
             if (addressText.Text != String.Empty &&
                 userText.Text != String.Empty &&
                 passwordText.Text != String.Empty) {
@@ -173,13 +177,13 @@ namespace CPUMinerGUI {
                 curItem.password = passwordText.Text;
                 curItem.description = notesText.Text;
 
-                writeList();
-                readList();
+                WriteList();
+                ReadList();
             }
 
         }
 
-        private void startButton_Click(object sender, EventArgs e) {
+        private void StartButton_Click(object sender, EventArgs e) {
             if (waitingForLog) return;
 
             string command = "-o " + curItem.address + " -u " + curItem.user + " -p " + curItem.password +
@@ -197,7 +201,7 @@ namespace CPUMinerGUI {
             waitingMiner = new Miner(p.Id, threadsText.Text, lowCpuCheck.Checked, curItem, p, "log");
         }
 
-        private void refreshInstanceList() {
+        private void RefreshInstanceList() {
             instancesList.Items.Clear();
             
             foreach (Miner miner in miners) {
@@ -218,7 +222,7 @@ namespace CPUMinerGUI {
             hashrateTimer.Enabled = miners.Count > 0;
         }
 
-        private void instancesList_SelectedIndexChanged(object sender, EventArgs e) {
+        private void InstancesList_SelectedIndexChanged(object sender, EventArgs e) {
             if (instancesList.SelectedIndex == -1) return;
 
             showButton.Enabled = true;
@@ -233,32 +237,32 @@ namespace CPUMinerGUI {
             priorityDropdown.SelectedIndex = curMiner.priority;
         }
 
-        private void showButton_Click(object sender, EventArgs e) {
+        private void ShowButton_Click(object sender, EventArgs e) {
             int hWnd = curMiner.proc.MainWindowHandle.ToInt32();
-            ShowWindow(hWnd, SW_SHOW);
+            ShowWindow(SW_SHOW, hWnd);
         }
 
-        private void hideButton_Click(object sender, EventArgs e) {
+        private void HideButton_Click(object sender, EventArgs e) {
             int hWnd = curMiner.proc.MainWindowHandle.ToInt32();
-            ShowWindow(hWnd, SW_HIDE);
+            ShowWindow(SW_HIDE, hWnd);
         }
 
-        private void stopButton_Click(object sender, EventArgs e) {
+        private void StopButton_Click(object sender, EventArgs e) {
             curMiner.proc.Kill();
 
             miners.Remove(curMiner);
-            refreshInstanceList();
+            RefreshInstanceList();
         }
 
-        private void hashrateTimer_Tick(object sender, EventArgs e) {
+        private void HashrateTimer_Tick(object sender, EventArgs e) {
             Random rnd = new Random();
             fullHashrate = "0 h/s";
 
             foreach (Miner miner in miners) {
-                string hashrate = parseLogTail(miner.logFile);
+                string hashrate = ParseLogTail(miner.logFile);
 
                 miner.hashrate = (hashrate != String.Empty ? hashrate : miner.hashrate);
-                summHashrate(miner.hashrate);
+                SummHashrate(miner.hashrate);
 
                 int idx = instancesList.FindString("[" + miner.pid + "]");
                 instancesList.Items[idx] = "[" + miner.pid + "]" +
@@ -279,12 +283,12 @@ namespace CPUMinerGUI {
             if (hashChart.Series[0].Points.Count > 100) hashChart.Series[0].Points.RemoveAt(0);
         }
 
-        private void summHashrate(string hashrate) {
+        private void SummHashrate(string hashrate) {
             float rate = float.Parse(hashrate.Split(' ')[0]);
             fullHashrate = float.Parse(fullHashrate.Split(' ')[0]) + rate + " " + hashrate.Split(' ')[1];
         }
 
-        private string parseLogTail(string file) {
+        private string ParseLogTail(string file) {
             string[] lines;
             using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var sr = new StreamReader(fs)) {
@@ -310,7 +314,7 @@ namespace CPUMinerGUI {
             return hashrate;
         }
 
-        private void priorityDropdown_SelectedIndexChanged(object sender, EventArgs e) {
+        private void PriorityDropdown_SelectedIndexChanged(object sender, EventArgs e) {
             switch (priorityDropdown.SelectedIndex) {
                 case 0:
                     curMiner.priority = 0;
@@ -341,7 +345,7 @@ namespace CPUMinerGUI {
             }
         }
 
-        private void moveUpButton_Click(object sender, EventArgs e) {
+        private void MoveUpButton_Click(object sender, EventArgs e) {
             if (poolsList.SelectedIndex == -1 || poolsList.SelectedIndex == 0) return;
 
             string tmp = poolsList.Items[poolsList.SelectedIndex - 1] as string;
@@ -351,12 +355,12 @@ namespace CPUMinerGUI {
             PoolItem tmpItem = poolList[poolsList.SelectedIndex - 1] as PoolItem;
             poolList[poolsList.SelectedIndex - 1] = poolList[poolsList.SelectedIndex];
             poolList[poolsList.SelectedIndex] = tmpItem;
-            writeList();
+            WriteList();
 
             poolsList.SelectedIndex--;
         }
 
-        private void moveDownButton_Click(object sender, EventArgs e) {
+        private void MoveDownButton_Click(object sender, EventArgs e) {
             if (poolsList.SelectedIndex == -1 || poolsList.SelectedIndex == poolsList.Items.Count - 1) return;
 
             string tmp = poolsList.Items[poolsList.SelectedIndex + 1] as string;
@@ -366,7 +370,7 @@ namespace CPUMinerGUI {
             PoolItem tmpItem = poolList[poolsList.SelectedIndex + 1] as PoolItem;
             poolList[poolsList.SelectedIndex + 1] = poolList[poolsList.SelectedIndex];
             poolList[poolsList.SelectedIndex] = tmpItem;
-            writeList();
+            WriteList();
 
             poolsList.SelectedIndex++;
         }

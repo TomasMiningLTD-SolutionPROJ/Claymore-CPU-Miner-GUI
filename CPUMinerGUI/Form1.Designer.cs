@@ -72,7 +72,7 @@
             this.poolsList.Name = "poolsList";
             this.poolsList.Size = new System.Drawing.Size(578, 121);
             this.poolsList.TabIndex = 0;
-            this.poolsList.SelectedIndexChanged += new System.EventHandler(this.poolsList_SelectedIndexChanged);
+            this.poolsList.SelectedIndexChanged += new System.EventHandler(this.PoolsList_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -146,7 +146,7 @@
             this.addButton.TabIndex = 9;
             this.addButton.Text = "Add";
             this.addButton.UseVisualStyleBackColor = true;
-            this.addButton.Click += new System.EventHandler(this.addButton_Click);
+            this.addButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
             // saveButton
             // 
@@ -157,7 +157,7 @@
             this.saveButton.TabIndex = 10;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
-            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            this.saveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
             // removeButton
             // 
@@ -168,7 +168,7 @@
             this.removeButton.TabIndex = 11;
             this.removeButton.Text = "Remove";
             this.removeButton.UseVisualStyleBackColor = true;
-            this.removeButton.Click += new System.EventHandler(this.removeButton_Click);
+            this.removeButton.Click += new System.EventHandler(this.RemoveButton_Click);
             // 
             // lowCpuCheck
             // 
@@ -226,7 +226,7 @@
             this.instancesList.Name = "instancesList";
             this.instancesList.Size = new System.Drawing.Size(430, 121);
             this.instancesList.TabIndex = 17;
-            this.instancesList.SelectedIndexChanged += new System.EventHandler(this.instancesList_SelectedIndexChanged);
+            this.instancesList.SelectedIndexChanged += new System.EventHandler(this.InstancesList_SelectedIndexChanged);
             // 
             // groupBox1
             // 
@@ -286,7 +286,7 @@
             this.startButton.TabIndex = 19;
             this.startButton.Text = "Start instance";
             this.startButton.UseVisualStyleBackColor = true;
-            this.startButton.Click += new System.EventHandler(this.startButton_Click);
+            this.startButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // stopButton
             // 
@@ -297,7 +297,7 @@
             this.stopButton.TabIndex = 20;
             this.stopButton.Text = "Kill";
             this.stopButton.UseVisualStyleBackColor = true;
-            this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
+            this.stopButton.Click += new System.EventHandler(this.StopButton_Click);
             // 
             // showButton
             // 
@@ -308,7 +308,7 @@
             this.showButton.TabIndex = 21;
             this.showButton.Text = "Show";
             this.showButton.UseVisualStyleBackColor = true;
-            this.showButton.Click += new System.EventHandler(this.showButton_Click);
+            this.showButton.Click += new System.EventHandler(this.ShowButton_Click);
             // 
             // hideButton
             // 
@@ -319,12 +319,12 @@
             this.hideButton.TabIndex = 22;
             this.hideButton.Text = "Hide";
             this.hideButton.UseVisualStyleBackColor = true;
-            this.hideButton.Click += new System.EventHandler(this.hideButton_Click);
+            this.hideButton.Click += new System.EventHandler(this.HideButton_Click);
             // 
             // hashrateTimer
             // 
             this.hashrateTimer.Interval = 2000;
-            this.hashrateTimer.Tick += new System.EventHandler(this.hashrateTimer_Tick);
+            this.hashrateTimer.Tick += new System.EventHandler(this.HashrateTimer_Tick);
             // 
             // fullHashrateLabel
             // 
@@ -406,7 +406,7 @@
             this.priorityDropdown.Name = "priorityDropdown";
             this.priorityDropdown.Size = new System.Drawing.Size(93, 21);
             this.priorityDropdown.TabIndex = 26;
-            this.priorityDropdown.SelectedIndexChanged += new System.EventHandler(this.priorityDropdown_SelectedIndexChanged);
+            this.priorityDropdown.SelectedIndexChanged += new System.EventHandler(this.PriorityDropdown_SelectedIndexChanged);
             // 
             // label9
             // 
@@ -426,7 +426,7 @@
             this.moveUpButton.TabIndex = 28;
             this.moveUpButton.Text = "^";
             this.moveUpButton.UseVisualStyleBackColor = true;
-            this.moveUpButton.Click += new System.EventHandler(this.moveUpButton_Click);
+            this.moveUpButton.Click += new System.EventHandler(this.MoveUpButton_Click);
             // 
             // moveDownButton
             // 
@@ -437,7 +437,7 @@
             this.moveDownButton.TabIndex = 29;
             this.moveDownButton.Text = "v";
             this.moveDownButton.UseVisualStyleBackColor = true;
-            this.moveDownButton.Click += new System.EventHandler(this.moveDownButton_Click);
+            this.moveDownButton.Click += new System.EventHandler(this.MoveDownButton_Click);
             // 
             // Form1
             // 
